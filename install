@@ -179,7 +179,9 @@ then
 
   echo "[LIBPINPROC] Installing libpinproc"
 
-  git clone --branch master https://github.com/preble/libpinproc.git libpinproc
+### P3ROC requires libpinproc dev branch
+
+  git clone --branch dev https://github.com/preble/libpinproc.git libpinproc
   cd libpinproc
 
   mkdir bin
