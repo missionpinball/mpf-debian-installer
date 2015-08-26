@@ -64,7 +64,7 @@ echo "Installing prerequsites via apt-get"
 sudo apt-get update
 sudo apt-get -y install unzip cmake gcc g++ build-essential git-core libmpg123-0
 sudo apt-get -y install python2.7 python-dev python-setuptools libyaml-dev mplayer
-sudo apt-get -y install python-pygame libsdl1.2-dev
+sudo apt-get -y install python-pygame libsdl1.2-dev python-serial
 
 echo "[PyYAML] Installing PyYAML 3.11"
 
