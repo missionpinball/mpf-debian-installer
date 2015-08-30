@@ -1,7 +1,8 @@
 ##!/bin/bash
 
 # This script should be used to cleanup the install directory
-# and start again. It should be run as root.
+# and start again. It should be run as root. It does NOT uninstall
+# anything--it only cleans up this folder.
 # e.g. sudo ./cleanup
 
 rm -r libftdi1-1.1

@@ -178,6 +178,7 @@ then
   source ~/.bashrc
 
   sudo cp 50-P-ROC.rules /etc/udev/rules.d
+  sudo cp 51-P3-ROC.rules /etc/udev/rules.d
 
   echo "[LIBPINPROC] Installing libpinproc"
 
