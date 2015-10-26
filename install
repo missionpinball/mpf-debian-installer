@@ -1,4 +1,4 @@
-##!/bin/bash
+#!/bin/bash
 
 echo "      ##############################################"
 echo "     # IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT! #"
@@ -275,12 +275,12 @@ echo "                     ( ~/pinball/mpf )"
 echo ""
 echo "                     Happy pinballing!"
 echo ""
-read -p "Do you want to reboot now? (y or n)" -n 1 -r
+read -p "Do you want to reboot now? (y or n)" -n 1 -r REBOOTREPLY
 echo    # (optional) move to a new line
-if [[ $REPLY = "y" ]]; then
-  read -p "Are you sure you want to reboot? (y or n)" -n 1 -r
+if [[ $REBOOTREPLY = "y" ]]; then
+  read -p "Are you sure you want to reboot? (y or n)" -n 1 -r REBOOTREPLYCONFIRM
   echo    # (optional) move to a new line
-  if [[ $REPLY = "y" ]]; then
+  if [[ $REBOOTREPLYCONFIRM = "y" ]]; then
     sudo shutdown -r now
   else
     echo "REMEMBER TO REBOOT BEFORE YOU TRY TO USE THE GAME"
