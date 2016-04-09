@@ -1,50 +1,27 @@
 #!/bin/bash
 
-echo "      ##############################################"
-echo "     # IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT! #"
-echo "    # ENVIRONMENT VARIABLES WILL NOT BUILD.      #"
-echo "   #                                            #"
-echo "  # IF YOU RAN THIS WITH SUDO, PRESS CTRL-C    #"
-echo " # NOW AND RUN AS A NORMAL USER.              #"
-echo "##############################################"
-
-### Choose the pinball controller hardware that you will be using
-echo "Which hardware will you be using? If you know, but don't have it,"
-echo "choose it anyway."
-echo ""
-echo "(Enter 1 for FAST, 2 for P3 or P-ROC, 3 for none, or CTRL-C to quit)"
-read REPLY
-case $REPLY in
-	1) PLATFORM="FAST";;
- 	2) PLATFORM="PROC";;
-  3) PLATFORM="NONE";;
-esac
-
-#echo $PLATFORM
-
-
-if [ $PLATFORM != "FAST" ] && [ $PLATFORM != "PROC" ] && [ $PLATFORM != "NONE" ]
-then
-	echo
-	echo "########################"
-	echo "Please enter 1, 2, or 3"
-	exit
-fi
-
-clear
+echo "####################################################"
+echo "##   IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT!   ##"
+echo "##   RUN AS A REGULAR USER, AND ENTER THE SUDO    ##"
+echo "##   PASSWORD WHEN ASKED.                         ##"
+echo "##                                                ##"                                          
+echo "##  THE SCRIPT WILL ELEVATE PRIVILEGES AS NEEDED  ##"
+echo "##                                                ##"
+echo "##    IF YOU RAN THIS WITH SUDO, PRESS CTRL-C     ##"
+echo "##         NOW AND RUN AS A NORMAL USER.          ##"
+echo "####################################################"
 
 ### Choose the build you want to deploy, dev or master
-### MPF requires the DEV branch of pypinproc, so we'll get that automatically
 
-echo "Last Question: Choose which build of MPF you would like to deploy:"
+echo "Choose which build of MPF you would like to deploy:"
 echo ""
-echo "If you don't know, choose 2 for master. You can easily switch later."
+echo "You should probably choose 1 for master. You can easily switch later."
 echo ""
-echo "(Enter 1 for dev, 2 for master, or CTRL-C to quit)"
+echo "(Enter 1 for master, 2 for dev, or CTRL-C to quit)"
 read REPLY
 case $REPLY in
- 	1) BRANCH="dev";;
- 	2) BRANCH="master";;
+ 	1) BRANCH="master";;
+ 	2) BRANCH="dev";;
 esac
 
 if [ $BRANCH != "dev" ] && [ $BRANCH != "master" ]
@@ -59,219 +36,38 @@ fi
 clear
 
 echo
-echo "Installing prerequsites via apt-get"
+echo "[INFO] Installing prerequsites via apt-get"
 
 sudo apt-get update
-sudo apt-get -y install unzip cmake gcc g++ build-essential git-core libmpg123-0
-sudo apt-get -y install python2.7 python-dev python-setuptools libyaml-dev mplayer
-sudo apt-get -y install python-pygame libsdl1.2-dev python-serial
+sudo apt-get -y install git-core python3-pip libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-image-dev
+sudo apt-get -y install gstreamer1.0
 
-echo "[PyYAML] Installing PyYAML 3.11"
+echo
+echo "[INFO] Installing prerequisites via pip"
 
-tar -zxpvf PyYAML-3.11.tar.gz
-cd PyYAML-3.11
-sudo python setup.py install
+sudo pip3 install -I cython==0.23
+sudo pip3 install kivy
 
-if [ $? -ne 0 ]; then
-      echo "PyYAML installation failed"
-      exit 1
-fi
+echo "[INFO] Installing MPF"
 
-echo "Backing out to main directory..."
+sudo cp 50-P-ROC.rules /etc/udev/rules.d
+sudo cp 51-P3-ROC.rules /etc/udev/rules.d
 
-cd ..
-
-##########################################
-##         P-ROC and P3 Support         ##
-##########################################
-echo $PLATFORM
-if [ $PLATFORM = "PROC" ]
-then
-  echo "[PROC PREREQS] Installing PROC prerequisites via apt-get"
-  sudo apt-get -y install zlib1g-dev libudev-dev libusb-dev
-
-  echo "[LIBUSB1] Installing libusb1"
-
-  tar -jxvpf libusb-1.0.18.tar.bz2
-  cd libusb-1.0.18
-  ./configure
-  make
-  sudo make install
-
-  if [ $? -ne 0 ]; then
-  echo "libusb1 install failed."
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-
-  cd ../
-
-  echo "[LIBUSBX] Installing libusbx"
-
-  tar -jxvpf libusbx-1.0.18.tar.bz2
-  cd libusbx-1.0.18
-  ./configure
-  make
-  sudo make install
-
-  if [ $? -ne 0 ]; then
-  echo "libusbx install failed."
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-
-  cd ../
-
-  echo "[LIBFTDI1] Installing libftdi1"
-
-  tar -jxpvf libftdi1-1.1.tar.bz2
-  cd libftdi1-1.1
-  mkdir bin
-  cd bin
-  cmake ..
-  make
-  sudo make install
-
-  if [ $? -ne 0 ]; then
-  echo "LIBFTDI1 install failed."
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-  cd ../..
-
-  echo "[YAML-CPP] Installing YAML-CPP"
-
-  tar -zxpvf yaml-cpp-0.2.5.tar.gz
-  cd yaml-cpp-0.2.5/
-  mkdir bin
-  cd bin
-  cmake ..
-  make
-  sudo make install
-
-  if [ $? -ne 0 ]; then
-  echo "YAML-CPP install failed."
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-  cd ../..
-
-  echo "Setting up environment variables..."
-
-  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-  export C_INCLUDE_PATH_TEMP=$(find /usr/ -name ftdi.h -printf '%h\072')
-  export CPLUS_INCLUDE_PATH_TEMP=$(find /usr/ -name ftdi.h -printf '%h\072')
-  export C_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
-  export CPLUS_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
-
-
-  echo "Stuff should be exported now"
-
-  echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
-  echo "export C_INCLUDE_PATH="$C_INCLUDE_PATH_TEMP":$C_INCLUDE_PATH" >> ~/.bashrc
-  echo "export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH_TEMP":$CPLUS_INCLUDE_PATH" >> ~/.bashrc
-
-  source ~/.bashrc
-
-  sudo cp 50-P-ROC.rules /etc/udev/rules.d
-  sudo cp 51-P3-ROC.rules /etc/udev/rules.d
-
-  echo "[LIBPINPROC] Installing libpinproc"
-
-### P3ROC requires libpinproc dev branch
-
-  git clone --branch dev https://github.com/preble/libpinproc.git libpinproc
-  cd libpinproc
-
-  mkdir bin
-  cd bin
-
-  cmake -DBUILD_SHARED_LIBS=ON ..
-  make
-  sudo make install
-
-  if [ $? -ne 0 ]; then
-  echo "libpinproc installation failed."
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-
-  cd ../..
-
-  echo "[PyPINPROC] Installing pypinproc"
-
-  git clone --branch dev http://github.com/preble/pypinproc.git pypinproc
-  cd pypinproc
-  sudo python setup.py install
-
-  if [ $? -ne 0 ]; then
-  echo "PyPinproc installation failed"
-  exit 1
-  fi
-
-  echo "Backing out to main directory..."
-
-  cd ..
-
-fi
-
-echo "[OSC] Installing OSC"
-
-tar -zxvpf pyOSC-0.3.5b-5294.tar.gz
-cd pyOSC-0.3.5b-5294
-sudo python setup.py install
-
-if [ $? -ne 0 ]; then
-echo "OSC install failed."
-exit 1
-fi
-
-echo "Backing out to main directory..."
-
-cd ../
-
-echo "Setting up mplayer for audio testing" #might not be needed later
-echo "afm=mp3lib" >> ~/.mplayer/config
-
-
-echo "[MPF] Installing MPF"
 mkdir ~/pinball
 cd ~/pinball
-git clone --branch dev https://github.com/missionpinball/mpf.git mpf
+git clone --branch dev https://github.com/missionpinball/mpf
+git clone --branch dev https://github.com/missionpinball/mpf-mc
+git clone --branch dev https://github.com/missionpinball/mpf-examples
 
-##########################################
-# This creates a mpf folder in ~/pinball #
-# so it's not in the toolkit folder      #
-##########################################
-
-cd -
+echo "                   Installation finished."
+echo "============================================================"
+echo "   If you're using a P-ROC or P3-ROC, you should reboot."
 echo ""
-echo ""
-echo ""
-clear
-
-if [ $PLATFORM = "PROC" ]; then
-  echo "                   Installation finished."
-  echo "============================================================"
-  echo "!!!    You need to restart to complete installation!    !!!"
-  echo "      (It's complicated. Check the script to see why)"
-  echo ""
-else
-  echo "                   Installation finished."
-  echo "============================================================"
-  echo "   You shouldn't have to reboot, but what the heck, right?  "
-  echo ""
-fi
-
 echo "      When you are done, check your home folder for a"
-echo "      'pinball' folder. In there is the 'mpf' folder"
-echo "             and you'll be able to get started."
-echo "                     ( ~/pinball/mpf )"
+echo "      'pinball' folder. In there is the folders you"
+echo "                    need to get started."
+echo ""
+echo "   For more information, visit docs.missionpinball.com"
 echo ""
 echo "                     Happy pinballing!"
 echo ""
