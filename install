@@ -59,6 +59,12 @@ git clone --branch dev https://github.com/missionpinball/mpf
 git clone --branch dev https://github.com/missionpinball/mpf-mc
 git clone --branch dev https://github.com/missionpinball/mpf-examples
 
+cd ~/pinball/mpf
+sudo pip3 install -e .
+cd ~/pinball/mpf-mc
+sudo pip3 install -e .
+cd ~/pinball
+
 echo "                   Installation finished."
 echo "============================================================"
 echo "   If you're using a P-ROC or P3-ROC, you should reboot."
