@@ -1,69 +1,31 @@
 #!/bin/bash
 
-echo "####################################################"
-echo "##   IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT!   ##"
-echo "##   RUN AS A REGULAR USER, AND ENTER THE SUDO    ##"
-echo "##   PASSWORD WHEN ASKED.                         ##"
-echo "##                                                ##"                                          
-echo "##  THE SCRIPT WILL ELEVATE PRIVILEGES AS NEEDED  ##"
-echo "##                                                ##"
-echo "##    IF YOU RAN THIS WITH SUDO, PRESS CTRL-C     ##"
-echo "##         NOW AND RUN AS A NORMAL USER.          ##"
-echo "####################################################"
-
-### Choose the build you want to deploy, dev or master
-
-echo "Choose which build of MPF you would like to deploy:"
-echo ""
-echo "You should probably choose 1 for master. You can easily switch later."
-echo ""
-echo "(Enter 1 for master, 2 for dev, or CTRL-C to quit)"
-read REPLY
-case $REPLY in
- 	1) BRANCH="master";;
- 	2) BRANCH="dev";;
-esac
-
-if [ $BRANCH != "dev" ] && [ $BRANCH != "master" ]
-then
- 	echo
- 	echo "###################"
- 	echo "Please enter 1 or 2"
- 	echo "If you want to get down and dirty, you'll have to edit this script."
- 	exit
-fi
-
-clear
-
 echo
 echo "[INFO] Installing prerequsites via apt-get"
 
 sudo apt-get update
-sudo apt-get -y install git-core python3-pip libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-image-dev
+sudo add-apt-repository -y ppa:kivy-team/kivy
+sudo apt-get update
+
+sudo apt-get install -y python3-kivy
+
+sudo apt-get install -y git cython3 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libav-tools libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev python3-pip
 sudo apt-get -y install gstreamer1.0
 
 echo
-echo "[INFO] Installing prerequisites via pip"
-
-sudo pip3 install -I cython==0.23
-sudo pip3 install kivy
-
 echo "[INFO] Installing MPF"
 
 sudo cp 50-P-ROC.rules /etc/udev/rules.d
 sudo cp 51-P3-ROC.rules /etc/udev/rules.d
 
+sudo pip3 install --pre mpf-mc
+
+echo
+echo "[INFO] Downloading example game files"
+
 mkdir ~/pinball
 cd ~/pinball
-git clone --branch dev https://github.com/missionpinball/mpf
-git clone --branch dev https://github.com/missionpinball/mpf-mc
 git clone --branch dev https://github.com/missionpinball/mpf-examples
-
-cd ~/pinball/mpf
-sudo pip3 install -e .
-cd ~/pinball/mpf-mc
-sudo pip3 install -e .
-cd ~/pinball
 
 echo "                   Installation finished."
 echo "============================================================"
