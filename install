@@ -33,44 +33,25 @@ fi
 
 clear
 
-### Choose the build you want to deploy, dev or master
-### MPF requires the DEV branch of pypinproc, so we'll get that automatically
-
-echo "Last Question: Choose which build of MPF you would like to deploy:"
-echo ""
-echo "If you don't know, choose 2 for master. You can easily switch later."
-echo ""
-echo "(Enter 1 for dev, 2 for master, or CTRL-C to quit)"
-read REPLY
-case $REPLY in
- 	1) BRANCH="dev";;
- 	2) BRANCH="master";;
-esac
-
-if [ $BRANCH != "dev" ] && [ $BRANCH != "master" ]
-then
- 	echo
- 	echo "###################"
- 	echo "Please enter 1 or 2"
- 	echo "If you want to get down and dirty, you'll have to edit this script."
- 	exit
-fi
-
-clear
-
 echo
 echo "Installing prerequsites via apt-get"
 
+sudo add-apt-repository -y ppa:kivy-team/kivy
 sudo apt-get update
-sudo apt-get -y install unzip cmake gcc g++ build-essential git-core libmpg123-0
-sudo apt-get -y install python2.7 python-dev python-setuptools libyaml-dev mplayer
-sudo apt-get -y install python-pygame libsdl1.2-dev python-serial
+
+sudo apt-get install -y python3-kivy
+
+sudo apt-get install -y cython3 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libav-tools libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
+
+#####sudo apt-get -y install unzip cmake gcc g++ build-essential git-core libmpg123-0
+#####sudo apt-get -y install python2.7 python-dev python-setuptools libyaml-dev mplayer
+#####sudo apt-get -y install python-pygame libsdl1.2-dev python-serial
 
 echo "[PyYAML] Installing PyYAML 3.11"
 
 tar -zxpvf PyYAML-3.11.tar.gz
 cd PyYAML-3.11
-sudo python setup.py install
+sudo python3 setup.py install
 
 if [ $? -ne 0 ]; then
       echo "PyYAML installation failed"
@@ -88,7 +69,7 @@ echo $PLATFORM
 if [ $PLATFORM = "PROC" ]
 then
   echo "[PROC PREREQS] Installing PROC prerequisites via apt-get"
-  sudo apt-get -y install zlib1g-dev libudev-dev libusb-dev
+  sudo apt-get -y install python3-dev python3-setuptools python3-pip cmake gcc g++ build-essential git-core zlib1g-dev libudev-dev libusb-dev pkg-config libboost-dev
 
   echo "[LIBUSB1] Installing libusb1"
 
@@ -182,7 +163,7 @@ then
 
   echo "[LIBPINPROC] Installing libpinproc"
 
-### P3ROC requires libpinproc dev branch
+### P3ROC requires libpinproc dev branch, so we'll just get that even if you use a PROC
 
   git clone --branch dev https://github.com/preble/libpinproc.git libpinproc
   cd libpinproc
@@ -201,13 +182,13 @@ then
 
   echo "Backing out to main directory..."
 
-  cd ../..
+cd ../..
 
-  echo "[PyPINPROC] Installing pypinproc"
+echo "[PyPINPROC] Installing pypinproc"
 
-  git clone --branch dev http://github.com/preble/pypinproc.git pypinproc
+  git clone https://github.com/missionpinball/pypinproc pypinproc
   cd pypinproc
-  sudo python setup.py install
+  sudo python3 setup.py install
 
   if [ $? -ne 0 ]; then
   echo "PyPinproc installation failed"
@@ -216,62 +197,28 @@ then
 
   echo "Backing out to main directory..."
 
-  cd ..
+cd ..
 
 fi
 
-echo "[OSC] Installing OSC"
-
-tar -zxvpf pyOSC-0.3.5b-5294.tar.gz
-cd pyOSC-0.3.5b-5294
-sudo python setup.py install
-
-if [ $? -ne 0 ]; then
-echo "OSC install failed."
-exit 1
-fi
-
-echo "Backing out to main directory..."
-
-cd ../
-
-echo "Setting up mplayer for audio testing" #might not be needed later
-echo "afm=mp3lib" >> ~/.mplayer/config
-
-
-echo "[MPF] Installing MPF"
-mkdir ~/pinball
-cd ~/pinball
-git clone --branch dev https://github.com/missionpinball/mpf.git mpf
-
-##########################################
-# This creates a mpf folder in ~/pinball #
-# so it's not in the toolkit folder      #
-##########################################
-
-cd -
-echo ""
-echo ""
-echo ""
-clear
 
 if [ $PLATFORM = "PROC" ]; then
-  echo "                   Installation finished."
+  echo "              Prerequisite Installation finished."
   echo "============================================================"
-  echo "!!!    You need to restart to complete installation!    !!!"
-  echo "      (It's complicated. Check the script to see why)"
+  echo "!!! You should probably restart to complete installation !!!"
+  echo "     (It's complicated, but then again, so is pinball.)"
   echo ""
 else
-  echo "                   Installation finished."
+  echo "              Prerequisite Installation finished."
   echo "============================================================"
   echo "   You shouldn't have to reboot, but what the heck, right?  "
   echo ""
 fi
 
-echo "      When you are done, check your home folder for a"
-echo "      'pinball' folder. In there is the 'mpf' folder"
-echo "             and you'll be able to get started."
-echo "                     ( ~/pinball/mpf )"
+echo "      When you are done, you'll need to install MPF. The"
+echo "       quick way is to simply run: 'pip3 install mpf-mc'"
+echo "        after you reboot. More information is available"
+echo "                  at docs.missionpinball.org"
 echo ""
 echo "                     Happy pinballing!"
 echo ""

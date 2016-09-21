@@ -12,5 +12,3 @@ rm -r libusbx-1.0.18
 rm -r pypinproc
 rm -r PyYAML-3.11
 rm -r yaml-cpp-0.2.5
-rm -r pyOSC-0.3.5b-5294
-rm -r libfastpinball
