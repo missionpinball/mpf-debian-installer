@@ -1,4 +1,4 @@
-#Version 2
+#Version 2.1
                 ********************************************                 
                 **      Unified Debian MPF Installer      **
                 ********************************************
@@ -36,14 +36,23 @@ ODROID).
 
 // USAGE //
 
-./install
+# Install MPF dependencies
+sudo ./install-mpf
 
-When used with a P-ROC, this script requires a reboot (you will be prompted). 
+# Install P-Roc dependencies (only needed for P-Roc and P3-Roc; run as user)
+./install-proc
+
+# Install MPF and MPF-MC via pip
+pip3 install mpf mpf-mc
+
+When used with a P-ROC, this script requires a reboot (you will be prompted).
 There is a permissions rule that must be read at boot to allow non-root users
 access to the ftdi driver. 
 
 If you're using FAST or other controllers, no reboot should be necessary.
 
-It is not necessary (or advised) to run this as root, though you will be 
+It is not necessary (or advised) to run install-proc as root, though you will be
 prompted to enter a root password right away. The script will elevate 
 privileges as necessary.
+
+Tested with Debian Jessie, Ubuntu 14.04 and Ubuntu 16.04 (let us know if it works on other derivates)

@@ -1,0 +1,157 @@
+#!/bin/bash
+
+if [[ $EUID -eq 0 ]]; then
+echo "   ##############################################"
+echo "  # IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT! #"
+echo " # Restart as user!                          #"
+echo "##############################################"
+exit 1
+fi
+
+
+##########################################
+##         P-ROC and P3 Support         ##
+##########################################
+echo "[PROC PREREQS] Installing PROC prerequisites via apt-get"
+sudo apt-get -y install cmake gcc g++ build-essential git-core zlib1g-dev libudev-dev libusb-dev pkg-config libboost-dev
+
+echo "[LIBUSB1] Installing libusb1"
+
+tar -jxvpf libusb-1.0.18.tar.bz2
+cd libusb-1.0.18
+./configure
+make
+sudo make install
+
+if [ $? -ne 0 ]; then
+echo "libusb1 install failed."
+exit 1
+fi
+
+echo "Backing out to main directory..."
+
+cd ../
+
+echo "[LIBUSBX] Installing libusbx"
+
+tar -jxvpf libusbx-1.0.18.tar.bz2
+cd libusbx-1.0.18
+./configure
+make
+sudo make install
+
+if [ $? -ne 0 ]; then
+echo "libusbx install failed."
+exit 1
+fi
+
+echo "Backing out to main directory..."
+
+cd ../
+
+echo "[LIBFTDI1] Installing libftdi1"
+
+tar -jxpvf libftdi1-1.1.tar.bz2
+cd libftdi1-1.1
+mkdir bin
+cd bin
+cmake ..
+make
+sudo make install
+
+if [ $? -ne 0 ]; then
+echo "LIBFTDI1 install failed."
+exit 1
+fi
+
+echo "Backing out to main directory..."
+cd ../..
+
+echo "[YAML-CPP] Installing YAML-CPP"
+
+tar -zxpvf yaml-cpp-0.2.5.tar.gz
+cd yaml-cpp-0.2.5/
+mkdir bin
+cd bin
+cmake ..
+make
+sudo make install
+
+if [ $? -ne 0 ]; then
+echo "YAML-CPP install failed."
+exit 1
+fi
+
+echo "Backing out to main directory..."
+cd ../..
+
+echo "Setting up environment variables..."
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export C_INCLUDE_PATH_TEMP=$(find /usr/ -name ftdi.h -printf '%h\072')
+export CPLUS_INCLUDE_PATH_TEMP=$(find /usr/ -name ftdi.h -printf '%h\072')
+export C_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
+export CPLUS_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
+
+
+echo "Stuff should be exported now"
+
+echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
+echo "export C_INCLUDE_PATH="$C_INCLUDE_PATH_TEMP":$C_INCLUDE_PATH" >> ~/.bashrc
+echo "export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH_TEMP":$CPLUS_INCLUDE_PATH" >> ~/.bashrc
+
+source ~/.bashrc
+
+sudo cp 50-P-ROC.rules /etc/udev/rules.d
+sudo cp 51-P3-ROC.rules /etc/udev/rules.d
+
+echo "[LIBPINPROC] Installing libpinproc"
+
+### P3ROC requires libpinproc dev branch, so we'll just get that even if you use a PROC
+
+git clone --branch dev https://github.com/preble/libpinproc.git libpinproc
+cd libpinproc
+
+mkdir bin
+cd bin
+
+cmake -DBUILD_SHARED_LIBS=ON ..
+make
+sudo make install
+
+if [ $? -ne 0 ]; then
+echo "libpinproc installation failed."
+exit 1
+fi
+
+echo "Backing out to main directory..."
+
+cd ../..
+
+echo "[PyPINPROC] Installing pypinproc"
+
+git clone https://github.com/missionpinball/pypinproc pypinproc
+cd pypinproc
+sudo python3 setup.py install
+
+if [ $? -ne 0 ]; then
+echo "PyPinproc installation failed"
+exit 1
+fi
+
+echo "Backing out to main directory..."
+
+
+echo "              Prerequisite Installation finished."
+echo "============================================================"
+echo "!!! You should probably restart to complete installation !!!"
+echo "     (It's complicated, but then again, so is pinball.)"
+echo ""
+
+echo "      When you are done, you'll need to install MPF. The"
+echo "       quick way is to simply run: 'pip3 install mpf-mc'"
+echo "        after you reboot. More information is available"
+echo "                  at docs.missionpinball.org"
+echo ""
+echo "                     Happy pinballing!"
+echo ""
