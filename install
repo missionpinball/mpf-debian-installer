@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+./install-mpf
+
+pip3 install mpf mpf-mc

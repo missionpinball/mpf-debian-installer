@@ -36,14 +36,11 @@ ODROID).
 
 // USAGE //
 
-# Install MPF dependencies
-sudo ./install-mpf
+# Install MPF
+sudo ./install
 
 # Install P-Roc dependencies (only needed for P-Roc and P3-Roc; run as user)
 ./install-proc
-
-# Install MPF and MPF-MC via pip
-pip3 install mpf mpf-mc
 
 When used with a P-ROC, this script requires a reboot (you will be prompted).
 There is a permissions rule that must be read at boot to allow non-root users
