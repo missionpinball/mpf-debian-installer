@@ -1,7 +1,5 @@
-#Version 2.1
-                ********************************************                 
-                **      Unified Debian MPF Installer      **
-                ********************************************
+# Unified Debian MPF Installer #
+## Version 2.1 ##
 
 This is the Debian installer for the Mission Pinball Framework. It will not 
 work for non-Debian distros or any other pinball controller hardware (but we'll
@@ -34,13 +32,13 @@ Kubuntu, etc...) only, but has been tested on traditional i386, x86_64, and
 ARM-based systems (like Raspberry Pi 1, 2 & 3, BeagleBone Black Rev C, and 
 ODROID). 
 
-// USAGE //
+## USAGE ##
 
-# Install MPF
-sudo ./install
+    # Install MPF
+    sudo ./install
 
-# Install P-Roc dependencies (only needed for P-Roc and P3-Roc; run as user)
-./install-proc
+    # Install P-Roc dependencies (only needed for P-Roc and P3-Roc; run as user) 
+    ./install-proc
 
 When used with a P-ROC, this script requires a reboot (you will be prompted).
 There is a permissions rule that must be read at boot to allow non-root users
