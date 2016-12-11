@@ -4,4 +4,4 @@ set -e
 
 ./install-mpf
 
-pip3 install mpf mpf-mc
+pip3 install --upgrade mpf mpf-mc
