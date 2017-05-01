@@ -16,6 +16,6 @@ pip3 install --upgrade setuptools
 echo "[MPF Installer] Updating python environment via pip (step 3/3)"
 pip3 install --upgrade pillow
 
-echo "[MPF Installer] Remove pip to prevent confusion with apt-get"
-apt-get -y remove python3-pip
+#echo "[MPF Installer] Remove pip to prevent confusion with apt-get"
+#apt-get -y remove python3-pip
 
