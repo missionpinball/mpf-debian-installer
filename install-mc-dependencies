@@ -10,7 +10,10 @@ apt-get -y install git libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mix
 echo "[MPF-MC Installer] Install Cython in the correct version for kivy."
 pip3 install -I Cython==0.25.2
 
-. /etc/lsb-release
+if [ -f "/etc/lsb-release" ]
+then
+    . /etc/lsb-release
+fi
 
 if [ -f "/etc/lsb-release" ] && [[ `/usr/bin/lsb_release -rs` == "18.04" || `/usr/bin/lsb_release -rs` == "17.10" ]]
 then
