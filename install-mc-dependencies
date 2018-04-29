@@ -12,7 +12,7 @@ pip3 install -I Cython==0.25.2
 
 . /etc/lsb-release
 
-if [[ `lsb_release -rs` == "18.04" || `lsb_release -rs` == "17.10" ]]
+if [[ `/usr/bin/lsb_release -rs` == "18.04" || `/usr/bin/lsb_release -rs` == "17.10" ]]
 then
     echo "[MPF-MC Installer] Installing kivy (dev) because 1.10 will not install"
     pip3 install git+https://github.com/kivy/kivy.git@master
