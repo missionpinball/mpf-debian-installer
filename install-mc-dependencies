@@ -10,15 +10,5 @@ apt-get -y install git libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mix
 echo "[MPF-MC Installer] Install Cython in the correct version for kivy."
 pip3 install -I Cython==0.25.2
 
-if [[ `/usr/bin/lsb_release -is` == "Ubuntu" ]] && [[ `/usr/bin/lsb_release -rs` == "18.04" || `/usr/bin/lsb_release -rs` == "17.10" ]]
-then
-    echo "[MPF-MC Installer] Installing kivy (dev) because 1.10 will not install"
-    pip3 install git+https://github.com/kivy/kivy.git@master
-elif [[ `/usr/bin/lsb_release -is` == "Debian" ]] && [[ `/usr/bin/lsb_release -cs` == "buster" ]]
-then
-    echo "[MPF-MC Installer] Installing kivy (dev) because 1.10 will not install"
-    pip3 install git+https://github.com/kivy/kivy.git@master
-else
-    echo "[MPF-MC Installer] Installing kivy stable"
-    pip3 install kivy
-fi
+echo "[MPF-MC Installer] Installing kivy (dev)"
+pip3 install git+https://github.com/kivy/kivy.git@master
