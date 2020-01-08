@@ -67,20 +67,20 @@ fi
 echo "Backing out to main directory..."
 cd ../..
 
-echo "[YAML-CPP] Installing YAML-CPP"
+#echo "[YAML-CPP] Installing YAML-CPP"
 
-tar -zxpvf yaml-cpp-0.2.5.tar.gz
-cd yaml-cpp-0.2.5/
-mkdir bin
-cd bin
-cmake ..
-make
-sudo make install
+#tar -zxpvf yaml-cpp-0.2.5.tar.gz
+#cd yaml-cpp-0.2.5/
+#mkdir bin
+#cd bin
+#cmake ..
+#make
+#sudo make install
 
-if [ $? -ne 0 ]; then
-echo "YAML-CPP install failed."
-exit 1
-fi
+#if [ $? -ne 0 ]; then
+#echo "YAML-CPP install failed."
+#exit 1
+#fi
 
 echo "Backing out to main directory..."
 cd ../..
