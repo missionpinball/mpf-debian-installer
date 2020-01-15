@@ -15,6 +15,11 @@ fi
 echo "[PROC PREREQS] Installing PROC prerequisites via apt-get"
 sudo apt-get -y install cmake gcc g++ build-essential git-core zlib1g-dev libudev-dev libusb-dev pkg-config libboost-dev
 
+if [ $? -ne 0 ]; then
+echo "apt failed."
+exit 1
+fi
+
 echo "[LIBUSB1] Installing libusb1"
 
 tar -jxvpf libusb-1.0.18.tar.bz2
