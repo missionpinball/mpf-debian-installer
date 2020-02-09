@@ -87,8 +87,8 @@ cd ../..
 #exit 1
 #fi
 
-echo "Backing out to main directory..."
-cd ../..
+#echo "Backing out to main directory..."
+#cd ../..
 
 echo "Setting up environment variables..."
 
