@@ -11,4 +11,4 @@ echo "[MPF-MC Installer] Install Cython in the correct version for kivy."
 pip3 install -I Cython==0.27.3
 
 echo "[MPF-MC Installer] Installing kivy stable"
-pip3 install kivy==1.10.1
+pip3 install kivy==1.11.1
