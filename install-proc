@@ -16,7 +16,7 @@ then
     echo "[CLEANUP] Will cleanup first"
     echo "Directories already exist. Do you want to delete them? Enter YES to proceed."
     read should_delete
-    if ( "$year" != "YES" )
+    if [ "$should_delete" != "YES" ]
     then
         echo "CANNOT PROCEED"
         exit 1
@@ -75,6 +75,11 @@ export C_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
 export CPLUS_INCLUDE_PATH=$(find /usr/ -name ftdi.h -printf '%h\072')
 
 echo "Stuff should be exported now"
+
+echo "export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH" >> ~/.bashrc
+echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:$C_INCLUDE_PATH" >> ~/.bashrc
+echo "export CPLUS_INCLUDE_PATH=\$CPLUS_INCLUDE_PATH:$CPLUS_INCLUDE_PATH" >> ~/.bashrc
+
 
 sudo cp 50-P-ROC.rules /etc/udev/rules.d
 sudo cp 51-P3-ROC.rules /etc/udev/rules.d
