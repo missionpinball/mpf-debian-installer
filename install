@@ -2,6 +2,14 @@
 
 set -e
 
+if [[ $EUID -eq 0 ]]; then
+echo "   ##############################################"
+echo "  # IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT! #"
+echo " # Restart as user!                          #"
+echo "##############################################"
+exit 1
+fi
+
 ./install-mpf-dependencies
 ./install-mc-dependencies
 

@@ -1,14 +1,22 @@
 #!/bin/bash
 
+if [[ $EUID -eq 0 ]]; then
+echo "   ##############################################"
+echo "  # IT IS NOT A GOOD IDEA TO RUN THIS AS ROOT! #"
+echo " # Restart as user!                          #"
+echo "##############################################"
+exit 1
+fi
+
 # always exit on error
 set -e
 
 echo "[MPF-MC Installer] Install packages using apt-get"
-apt-get update
-apt-get -y install git libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libgstreamer1.0-dev libxine2-ffmpeg libsmpeg-dev libswscale-dev libavformat-dev libavcodec-dev libjpeg-dev libtiff5-dev libx11-dev libmtdev-dev build-essential libgl1-mesa-dev libgles2-mesa-dev pulseaudio lsb-release
+sudo apt-get update
+sudo apt-get -y install git libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libgstreamer1.0-dev libxine2-ffmpeg libsmpeg-dev libswscale-dev libavformat-dev libavcodec-dev libjpeg-dev libtiff5-dev libx11-dev libmtdev-dev build-essential libgl1-mesa-dev libgles2-mesa-dev pulseaudio lsb-release
 
 echo "[MPF-MC Installer] Install Cython in the correct version for kivy."
-pip3 install -I Cython==0.27.3
+pip3 install --upgrade Cython==0.29.21
 
 echo "[MPF-MC Installer] Installing kivy stable"
-pip3 install kivy==1.11.1
+pip3 install --upgrade kivy==1.11.1
