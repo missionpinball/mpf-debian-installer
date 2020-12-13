@@ -9,6 +9,3 @@ apt-get -y install git libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mix
 
 echo "[MPF-MC Installer] Install Cython in the correct version for kivy."
 pip3 install --upgrade Cython==0.29.21
-
-echo "[MPF-MC Installer] Installing kivy stable"
-pip3 install --upgrade kivy==1.11.1
