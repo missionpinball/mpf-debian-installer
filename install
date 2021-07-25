@@ -5,4 +5,4 @@ set -e
 ./install-mpf-dependencies
 ./install-mc-dependencies
 
-pip3 install --upgrade mpf mpf-mc
+pip3 install --upgrade mpf[all] mpf-mc
